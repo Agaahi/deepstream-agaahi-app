@@ -1,0 +1,179 @@
+components:
+- name: Single Source Input0
+  parameters:
+    cudadec-memtype: '0'
+    dec-skip-frames: '0'
+    disable-audio: 'True'
+    disable-passthrough: 'True'
+    drop-frame-interval: '0'
+    file-loop: true
+    gpu-id: '0'
+    latency: '100'
+    num-extra-surfaces: '1'
+    rtsp-reconnect-interval: '0'
+    select-rtp-protocol: '0'
+    smart-rec-cache: '0'
+    smart-rec-container: '0'
+    smart-rec-default-duration: '20'
+    smart-rec-dir-path: ''
+    smart-rec-file-prefix: Smart_Record
+    smart-rec-mode: '0'
+    smart-rec-video-cache: '0'
+    smart-record: '0'
+    source-id: '-1'
+    type: '0'
+    udp-buffer-size: '524288'
+    uri: https://www.pexels.com/download/video/4750076/?fps=25.0&h=720&w=1280
+name: Single Source Input
+---
+components:
+- name: NVidia Video Renderer4
+  parameters:
+    color-range: '2'
+    conn-id: '2147483647'
+    gpu-id: '0'
+    height: '0'
+    nvbuf-memory-type: '0'
+    offset-x: '0'
+    offset-y: '0'
+    plane-id: '2147483647'
+    qos: 'False'
+    set-mode: '0'
+    sync: 'True'
+    video-sink: '2'
+    width: '0'
+name: NVidia Video Renderer
+---
+components:
+- name: Stream_Muxer
+  parameters:
+    async-process: 'True'
+    attach-sys-ts: 'True'
+    batch-size: 1
+    batched-push-timeout: '40000'
+    buffer-pool-size: 4
+    compute-hw: '0'
+    drop-pipeline-eos: 'False'
+    enable-padding: 'False'
+    frame-duration: '18446744073709'
+    frame-num-reset-on-eos: 'False'
+    frame-num-reset-on-stream-reset: 'False'
+    gpu-id: '0'
+    height: 1080
+    interpolation-method: '1'
+    live-source: false
+    max-latency: '0'
+    num-surfaces-per-frame: '1'
+    nvbuf-memory-type: '0'
+    sync-inputs: 'False'
+    width: 1920
+name: Stream Muxer
+---
+components:
+- name: On Screen Display19
+  parameters:
+    bbox-bg-colors: ''
+    bbox-border-colors: ''
+    border-width: '0'
+    clock-color: '0'
+    clock-font: ''
+    clock-font-size: '0'
+    display-bbox: 'True'
+    display-clock: 'False'
+    display-mask: 'False'
+    display-text: 'True'
+    display-tracking-id: 'True'
+    font: Serif
+    gpu-id: '0'
+    nvbuf-memory-type: '0'
+    process-mode: '0'
+    reformat-object-labels: 'False'
+    text-bg-color: '0'
+    text-color: '0'
+    text-size: '0'
+    x-clock-offset: '0'
+    y-clock-offset: '0'
+name: On Screen Display
+---
+components:
+- name: FPS Measurement9
+  parameters:
+    enable: 'True'
+    interval: '5'
+    print-time: 'False'
+name: FPS Measurement
+---
+components:
+- name: Object_Tracker
+  parameters:
+    compute-hw: '0'
+    display-tracking-id: 'True'
+    gpu-id: '0'
+    input-tensor-meta: 'False'
+    ll-config-file: ''
+    ll-lib-file: /opt/nvidia/deepstream/deepstream-6.4/sources/apps/composer_apps/deepstream-agaahi-app/lib/libnvds_nvmultiobjecttracker.so
+    tensor-meta-gie-id: '0'
+    tracker-height: 1080
+    tracker-width: 1920
+    tracking-id-reset-mode: '1'
+    tracking-surface-type: '0'
+    user-meta-pool-size: '16'
+name: Object Tracker
+---
+components:
+- name: Object_Analytics
+  parameters:
+    config-file: /opt/nvidia/deepstream/deepstream-6.4/sources/apps/composer_apps/deepstream-agaahi-app/configs/config_nvdsanalytics_agaahi.txt
+    enable: 'True'
+    unique-id: '17'
+name: Object Analytics
+---
+components:
+- name: Frame_Batcher
+  parameters:
+    async-process: 'True'
+    attach-sys-ts: 'True'
+    batch-size: 30
+    batched-push-timeout: 1000000
+    buffer-pool-size: '4'
+    compute-hw: '0'
+    drop-pipeline-eos: 'False'
+    enable-padding: 'False'
+    frame-duration: '18446744073709'
+    frame-num-reset-on-eos: 'False'
+    frame-num-reset-on-stream-reset: 'False'
+    gpu-id: '0'
+    height: 1080
+    interpolation-method: '1'
+    live-source: 'False'
+    max-latency: '0'
+    num-surfaces-per-frame: '1'
+    nvbuf-memory-type: '0'
+    sync-inputs: 'False'
+    width: 1920
+name: Frame_Batcher
+---
+components:
+- name: 1-to-N pipe fitting4
+  parameters:
+    allow-not-linked: 'False'
+    has-chain: 'True'
+    pull-mode: '0'
+    silent: 'True'
+name: 1-to-N pipe fitting
+---
+components:
+- name: Cloud Message Converter and Broker17
+  parameters:
+    disable-msgconv: 'False'
+    msg-broker-comp-id: '0'
+    msg-broker-config: '/opt/nvidia/deepstream/deepstream-6.4/sources/libs/aws_protocol_adaptor/device_client/cfg_aws.txt'
+    msg-broker-conn-str: 'a2ivm40came2p4-ats.iot.us-east-1.amazonaws.com;443;test'
+    msg-broker-proto-lib: '/opt/nvidia/deepstream/deepstream-6.4/sources/libs/aws_protocol_adaptor/device_client/libnvds_aws_proto.so'
+    msg-conv-comp-id: '0'
+    msg-conv-payload-type: '0'
+    multiple-payloads: false
+    new-api: 'False'
+    sync: false
+    topic: 'test'
+name: Cloud Message Converter and Broker
