@@ -12,7 +12,7 @@
 
 ```bash
 $ /opt/nvidia/graph-composer/execute_graph.sh deepstream-agaahi-app.yaml \
-      deepstream-agaahi-app.yaml -d ./configs/target_x86_64.yaml
+      deepstream-agaahi-app.parameters.yaml -d ./configs/target_x86_64.yaml
 
 ```
 
@@ -20,5 +20,5 @@ $ /opt/nvidia/graph-composer/execute_graph.sh deepstream-agaahi-app.yaml \
 
 ```bash
 $ /opt/nvidia/graph-composer/execute_graph.sh deepstream-agaahi-app.yaml \
-      deepstream-agaahi-app.yaml -d ./configs/target_aarch64.yaml
+      deepstream-agaahi-app.parameters.yaml -d ./configs/target_aarch64.yaml
 ```
