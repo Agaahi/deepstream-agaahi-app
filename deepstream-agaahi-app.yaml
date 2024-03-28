@@ -1,0 +1,278 @@
+application:
+  name: AgaahiGraph
+---
+dependencies:
+- extension: NvDsBaseExt
+  uuid: 56d7e3ec-62c6-4652-bcc8-4f1c3b00df03
+  version: 1.4.1
+- extension: NvDsOutputSinkExt
+  uuid: 3fc9ad87-03e7-47a8-bbfc-8501c3f7ff2f
+  version: 1.4.0
+- extension: NvDsMuxDemuxExt
+  uuid: 89b8398c-5820-4051-835c-a91f2d49766b
+  version: 1.4.0
+- extension: NvDsVisualizationExt
+  uuid: 25903cd4-fc5c-4139-987b-47bb27e8b424
+  version: 1.4.0
+- extension: NvDsInferenceExt
+  uuid: 0b02963e-c24e-4c13-ace0-c4cdf36c7c71
+  version: 1.4.0
+- extension: NvDsSampleModelsExt
+  uuid: 909dc1ea-c654-44c1-97a3-0b8fec12141a
+  version: 1.4.0
+- extension: NvDsInferenceUtilsExt
+  uuid: 27856a43-5ad4-4d8e-be36-0ec2cf9bbb58
+  version: 1.4.0
+- extension: NvDsAnalyticsExt
+  uuid: 0aee1c83-fad2-4bba-a25a-b253a8289f13
+  version: 1.4.0
+- extension: NvDsCloudMsgExt
+  uuid: d16b1366-dba2-47f6-95fc-b09b39f885de
+  version: 1.4.0
+- extension: NvDsSourceExt
+  uuid: a632d022-3425-4848-9074-e6483ef74366
+  version: 1.4.0
+- extension: NvDsSampleExt
+  uuid: 44a711e4-8519-4a68-81e8-be7ee4af3ff0
+  version: 1.4.0
+---
+components:
+- name: Deepstream Scheduler3
+  type: nvidia::deepstream::NvDsScheduler
+name: scheduler
+ui_property:
+  position:
+    x: -2363.875
+    y: 0.0
+---
+components:
+- name: NVidia Video Renderer4
+  parameters:
+    video-in: Static Data Input5
+  type: nvidia::deepstream::NvDsVideoRenderer
+- name: Static Data Input5
+  type: nvidia::deepstream::NvDsStaticInput
+name: NVidia Video Renderer
+ui_property:
+  position:
+    x: 1098.16748046875
+    y: 299.6567077636719
+---
+components:
+- name: Stream_Muxer
+  parameters:
+    batch-size: 1
+    buffer-pool-size: 4
+    height: 1080
+    live-source: false
+    video-in-%u: On Request Data Input13
+    video-out: Static Data Output14
+    width: 1920
+  type: nvidia::deepstream::NvDsStreamMux
+- name: On Request Data Input13
+  type: nvidia::deepstream::NvDsOnRequestInput
+- name: Static Data Output14
+  type: nvidia::deepstream::NvDsStaticOutput
+name: Stream Muxer
+ui_property:
+  position:
+    x: 175.4187469482422
+    y: 213.88204956054688
+---
+components:
+- name: On Screen Display19
+  parameters:
+    video-in: Static Data Input21
+    video-out: Static Data Output20
+  type: nvidia::deepstream::NvDsOSD
+- name: Static Data Output20
+  type: nvidia::deepstream::NvDsStaticOutput
+- name: Static Data Input21
+  type: nvidia::deepstream::NvDsStaticInput
+name: On Screen Display
+ui_property:
+  position:
+    x: 840.8411254882812
+    y: 294.5443115234375
+---
+components:
+- name: Deepstream Data Connection24
+  parameters:
+    source: On Screen Display/Static Data Output20
+    target: NVidia Video Renderer/Static Data Input5
+  type: nvidia::deepstream::NvDsConnection
+name: node5
+---
+components:
+- name: Object_Detector
+  parameters:
+    batch-size: 1
+    infer-model-config: 4-class Detector4
+    video-in: Static Data Input3
+    video-out: Static Data Output2
+  type: nvidia::deepstream::NvDsInferVideo
+- name: Static Data Output2
+  type: nvidia::deepstream::NvDsStaticOutput
+- name: Static Data Input3
+  type: nvidia::deepstream::NvDsStaticInput
+- name: 4-class Detector4
+  type: nvidia::deepstream::NvDsResnet10_4ClassDetectorModel
+name: Object_Detector
+ui_property:
+  position:
+    x: 450.6590881347656
+    y: 93.22785949707031
+---
+components:
+- name: Deepstream Data Connection5
+  parameters:
+    source: Stream Muxer/Static Data Output14
+    target: Object_Detector/Static Data Input3
+  type: nvidia::deepstream::NvDsConnection
+name: node0
+---
+components:
+- name: FPS Measurement9
+  parameters:
+    probe-connector: Probe Connector10
+  type: nvidia::deepstream::NvDsFpsMeasurement
+- name: Probe Connector10
+  type: nvidia::deepstream::NvDsProbeConnector
+name: FPS Measurement
+ui_property:
+  position:
+    x: 480.2898254394531
+    y: 311.6231384277344
+---
+components:
+- name: Probe Monitor11
+  parameters:
+    io: Stream Muxer/Static Data Output14
+    probe-connector: FPS Measurement/Probe Connector10
+  type: nvidia::deepstream::NvDsProbe
+name: node3
+---
+components:
+- name: Object_Analytics
+  parameters:
+    config-file: /opt/nvidia/deepstream/deepstream-6.4/sources/apps/composer_apps/deepstream-agaahi-app/configs/config_nvdsanalytics_agaahi.txt
+    video-in: Static Data Input25
+    video-out: Static Data Output24
+  type: nvidia::deepstream::NvDsAnalytics
+- name: Static Data Output24
+  type: nvidia::deepstream::NvDsStaticOutput
+- name: Static Data Input25
+  type: nvidia::deepstream::NvDsStaticInput
+name: Object Analytics
+ui_property:
+  position:
+    x: 716.084716796875
+    y: 117.61927795410156
+---
+components:
+- name: 1-to-N pipe fitting4
+  parameters:
+    in: Static Data Input5
+    out-%u: On Request Data Output6
+  type: nvidia::deepstream::NvDsTee
+- name: Static Data Input5
+  type: nvidia::deepstream::NvDsStaticInput
+- name: On Request Data Output6
+  type: nvidia::deepstream::NvDsOnRequestOutput
+name: 1-to-N pipe fitting
+ui_property:
+  position:
+    x: 1027.5858154296875
+    y: 90.7708969116211
+---
+components:
+- name: Deepstream Data Connection7
+  parameters:
+    source: Object Analytics/Static Data Output24
+    target: 1-to-N pipe fitting/Static Data Input5
+  type: nvidia::deepstream::NvDsConnection
+name: node1
+---
+components:
+- name: Deepstream Data Connection8
+  parameters:
+    source: 1-to-N pipe fitting/On Request Data Output6
+    target: On Screen Display/Static Data Input21
+  type: nvidia::deepstream::NvDsConnection
+name: node2
+---
+components:
+- name: Cloud Message Converter and Broker17
+  parameters:
+    in: Static Data Input18
+    msg-conv-config: /opt/nvidia/deepstream/deepstream-6.4/sources/apps/composer_apps/deepstream-agaahi-app/configs/msgconv_config.txt
+    multiple-payloads: false
+    sync: true
+  type: nvidia::deepstream::NvDsMsgConvBroker
+- name: Static Data Input18
+  type: nvidia::deepstream::NvDsStaticInput
+name: Cloud Message Converter and Broker
+ui_property:
+  position:
+    x: 1447.0950927734375
+    y: 260.4342956542969
+---
+components:
+- name: Deepstream Data Connection0
+  parameters:
+    source: 1-to-N pipe fitting/On Request Data Output6
+    target: Cloud Message Converter and Broker/Static Data Input18
+  type: nvidia::deepstream::NvDsConnection
+name: node0
+---
+components:
+- name: Deepstream Data Connection0
+  parameters:
+    source: Object_Detector/Static Data Output2
+    target: Object Analytics/Static Data Input25
+  type: nvidia::deepstream::NvDsConnection
+name: node0
+---
+components:
+- name: Camera Source Input0
+  parameters:
+    height: 1080
+    video-out: Static Data Output1
+    width: 1920
+  type: nvidia::deepstream::NvDsCameraSrcInput
+- name: Static Data Output1
+  type: nvidia::deepstream::NvDsStaticOutput
+name: Camera Source Input
+ui_property:
+  position:
+    x: -94.63815307617188
+    y: 230.28524780273438
+---
+components:
+- name: Deepstream Data Connection2
+  parameters:
+    source: Camera Source Input/Static Data Output1
+    target: Stream Muxer/On Request Data Input13
+  type: nvidia::deepstream::NvDsConnection
+name: node0
+---
+components:
+- name: DeepStream Message Meta Creator0
+  parameters:
+    probe-connector: Probe Connector1
+  type: nvidia::deepstream::NvDsSampleProbeMessageMetaCreation
+- name: Probe Connector1
+  type: nvidia::deepstream::NvDsProbeConnector
+name: DeepStream Message Meta Creator
+ui_property:
+  position:
+    x: 1015.876220703125
+    y: -57.871742248535156
+---
+components:
+- name: Probe Monitor2
+  parameters:
+    io: Object Analytics/Static Data Output24
+    probe-connector: DeepStream Message Meta Creator/Probe Connector1
+  type: nvidia::deepstream::NvDsProbe
+name: node0
